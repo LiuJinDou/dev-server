@@ -1,6 +1,9 @@
 
-./mysql/logs
-./mysql/data 
-./clickhouse/ch_logs
-./clickhouse/ch_data
-./database/.env
+deploy/database/mysql/data
+deploy/database/mysql/logs
+deploy/database/clickhouse/ch_logs
+deploy/database/clickhouse/ch_data
+
+*.env
+*.log
+.idea
