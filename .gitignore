@@ -1,0 +1,6 @@
+
+./mysql/logs
+./mysql/data 
+./clickhouse/ch_logs
+./clickhouse/ch_data
+./database/.env
