@@ -1,0 +1,15 @@
+version: '3'
+services:
+    mysql:
+        env_file:
+            - .env
+        container_name: ${COMPOSE_PROJECT_NAME:-mysql_dev}
+        image: mysql:latest
+        volumes:
+            - ./conf:/etc/mysql/conf.d:rw
+            - ./logs:/logs:rw
+            - ./data:/var/lib/mysql:rw
+        tty: true
+        restart: always
+        ports:
+            - "${PORT:-3306}:3306"
