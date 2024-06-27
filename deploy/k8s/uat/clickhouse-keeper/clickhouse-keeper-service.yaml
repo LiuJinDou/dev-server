@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse-keeper
+  namespace: bi-infra
+  labels:
+    app: clickhouse-keeper
+spec:
+  ports:
+    - name: keeper
+      port: 9181
+      targetPort: 9181
+  selector:
+    app: clickhouse-keeper
+  type: ClusterIP

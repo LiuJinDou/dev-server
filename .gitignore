@@ -7,3 +7,7 @@ deploy/database/clickhouse/ch_data
 *.env
 *.log
 .idea
+*.test.*
+./source-code
+./mysql/data
+./clickhouse

@@ -1,0 +1,43 @@
+version: "3"
+services:
+  kafka1:
+    container_name: "kafka_latest_version"
+    image: "${LATEST_IMAGE}:${LATEST_VERSION}"
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+  kafka2:
+    container_name: "kafka-old-1"
+    image: "${OLD_IMAGE}"
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9082
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9082 
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_BROKER_ID=1
+    ports:
+      - "9082:9092"
+      - "9083:9093"
+    depends_on:
+      - "zookeeper"
+    networks:
+      - kafka_default
+  zookeeper:
+    hostname: zookeeper
+    container_name: "zookeeper"
+    image: "${ZK_IMAGE}:${ZK_VERSION}"
+    environment:
+      ZOO_MY_ID: "1"
+    ports:
+      - "2181:2181"
+    healthcheck:
+      test: ["CMD-SHELL", "zookeeper-server-status || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - kafka_default
+
+networks:
+  kafka_default:
+    driver: bridge

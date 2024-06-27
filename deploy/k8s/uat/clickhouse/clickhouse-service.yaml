@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse-test-direct
+  namespace: bi-infra
+spec:
+  ports:
+    - name: http
+      port: 9000
+      nodePort: 32111
+      protocol: TCP
+      targetPort: 9000
+  selector:
+    clickhouse.altinity.com/app: chop
+    clickhouse.altinity.com/chi: test
+    clickhouse.altinity.com/namespace: bi-infra
+    clickhouse.altinity.com/ready: "yes"
+  type: NodePort
