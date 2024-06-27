@@ -8,6 +8,10 @@ deploy/database/clickhouse/ch_data
 *.log
 .idea
 *.test.*
-./source-code
-./mysql/data
-./clickhouse
+test.*
+source-code
+mysql/data
+mysql/logs
+clickhouse
+.vscode
+*.class
