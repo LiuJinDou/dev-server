@@ -1,0 +1,20 @@
+services:
+  clickhouse:
+    image:  clickhouse/clickhouse-server:latest
+    ports:
+      - "18123:8123"
+      - "9000:9000"
+    container_name: local-chi
+    volumes:
+      - ./data/clickhouse:/var/lib/clickhouse
+      # - ./config/config.xml:/etc/clickhouse-server/config.xml
+      # - ./config/users.xml:/etc/clickhouse-server/users.xml
+      # - ./config/config.d:/etc/clickhouse-server/config.d
+      # - ./config/users.d:/etc/clickhouse-server/users.d
+      - ./logs/clickhouse:/var/log/clickhouse-server
+    restart: on-failure
+    environment:
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=password
+      - CLICKHOUSE_UID=0
+      - CLICKHOUSE_GID=0

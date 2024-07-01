@@ -93,10 +93,15 @@ elif [ "$1" == "help" ] ; then
     usage
 fi
 
+# 检查并删除名为canal-server的容器（如果存在）
+if docker container inspect canal-server &> /dev/null; then
+    docker container rm -f canal-server
+    echo "deleted container canal-server"
+fi
 
-
-MEMORY="-m 4096m"
+# MEMORY="-m 4096m"
+MEMORY=""
 LOCALHOST=`getMyIp`
-cmd="docker run -d --privileged=true -it -h $LOCALHOST $CONFIG --name=canal-server $VOLUMNS $NET_MODE $PORTS $MEMORY canal/canal-server"
+cmd="docker run -d --privileged=true -it -h $LOCALHOST $CONFIG --name=canal-server $VOLUMNS $NET_MODE $PORTS $MEMORY canal/canal-server:latest"
 echo $cmd
 eval $cmd
