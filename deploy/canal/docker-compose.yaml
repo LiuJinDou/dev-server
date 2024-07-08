@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  canal-server:
+    image: canal/canal-server:latest
+    container_name: canal-server
+    ports:
+      - "11111:11111"
+    volumes:
+      # - ./local_conf/:/home/admin/canal-server/conf/local_conf
+      - ./example/:/home/admin/canal-server/conf/example
+      - ./canal.properties:/home/admin/canal-server/conf/canal.properties
+      - ./logs/:/home/admin/canal-server/logs/
