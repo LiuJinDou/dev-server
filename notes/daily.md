@@ -20,6 +20,13 @@ echo "b3JnLmFwYWNoZS5rYWZrYS5jb21tb24uc2VjdXJpdHkuc2NyYW0uU2NyYW1Mb2dpbk1vZHVsZS
 
 kubectl get secret uco-bi -n bi-infra -o jsonpath='{.data.password}' | base64 -d
 
+<!-- 重启指定的Deployment -->
+kubectl rollout restart deployment/bi-trino-coordinator -n bi-streaming
+kubectl rollout restart deployment/bi-trino-worker -n bi-streaming
+
+<!-- 删除状态为失败的POD -->
+kubectl -n uco-etl delete pods --field-selector=status.phase==Failed
+
 docker inspect canal/canal-server:v1.1.7
 docker run -i -t --rm --entrypoint=bash  canal/canal-server:v1.1.7
 
