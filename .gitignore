@@ -15,3 +15,6 @@ mysql/logs
 clickhouse
 .vscode
 *.class
+*.go.mod
+*.go.sum
+*.venv

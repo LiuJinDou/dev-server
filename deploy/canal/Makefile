@@ -3,3 +3,13 @@ install:
 
 # install:
 # 	docker run -d --privileged=true -it -h 1001 --env-file .env --name=canal-server --net=host -m 4096m canal/canal-server:v1.1.7
+
+.PYTHON: build remove
+
+build: remove
+	docker-compose up -d
+
+remove:
+	docker-compose down
+
+

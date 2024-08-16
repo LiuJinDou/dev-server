@@ -68,6 +68,20 @@ select * from jdbc('', 'show datasources');
 > read binlog
 ###### 5. kafka
 > kafkamap
+
+```
+
+kafka-topics.sh --list --bootstrap-server localhost:9092
+
+
+kafka-topics.sh --create --topic scalpler.order --bootstrap-server localhost:9092 --partitions 2 --replication-factor 1
+# --create：指定创建操作。
+# --topic my_topic：设置要创建的 topic 名称
+# --bootstrap-server <broker_host>:<broker_port>：Kafka broker 的地址和端口
+# --partitions 3：指定分区的数量
+# --replication-factor 1：指定副本因子
+
+```
 ###### 6. zookeeper
 ###### 5. mysql 
 > binlog
