@@ -42,7 +42,17 @@ docker push gitlab-registry.f.uco.com/p/it/big/uco-clickhouse-cluster/clickhouse
 docker tag clickhouse/clickhouse-keeper:24.5.1 gitlab-registry.f.uco.com/p/it/big/uco-clickhouse-cluster/clickhouse/clickhouse-keeper:24.5.1
 docker push gitlab-registry.f.uco.com/p/it/big/uco-clickhouse-cluster/clickhouse/clickhouse-keeper:24.5.1
 
+docker tag addressparser:v1.0 gitlab-registry.f.uco.com/p/it/big/uco-clickhouse-cluster/addressparser:v1.0
+docker push gitlab-registry.f.uco.com/p/it/big/uco-clickhouse-cluster/addressparser:v1.0
+
+
+
+docker tag uco-data-sync:1.1 gitlab-registry.f.uco.com/p/it/big/uco-data-sync:1.1
+docker push gitlab-registry.f.uco.com/p/it/big/uco-data-sync:1.1
+
 scp -r bi_dw liujindou@10.2.1.180:/home/liujindou/
+47.98.202.31
+kubectl rollout restart deployment/uat-bi-trino-worker
 
 ```
 
@@ -57,6 +67,8 @@ SELECT _shard_num,* FROM clusterAllReplicas('uco-bi-test', 'system', 'databases'
 
 -- show datasources
 select * from jdbc('', 'show datasources');
+
+CREATE USER admin IDENTIFIED WITH plaintext_password BY 'admin';
 
 ```
 
@@ -74,12 +86,20 @@ select * from jdbc('', 'show datasources');
 kafka-topics.sh --list --bootstrap-server localhost:9092
 
 
-kafka-topics.sh --create --topic scalpler.order --bootstrap-server localhost:9092 --partitions 2 --replication-factor 1
+kafka-topics.sh --create --topic scalpler.order --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 # --create：指定创建操作。
 # --topic my_topic：设置要创建的 topic 名称
 # --bootstrap-server <broker_host>:<broker_port>：Kafka broker 的地址和端口
 # --partitions 3：指定分区的数量
 # --replication-factor 1：指定副本因子
+
+# group
+./kafka-consumer-groups.sh --list --bootstrap-server 127.0.0.1:9092
+# producer
+kafka-console-producer.sh --topic scalpler.order --bootstrap-server localhost:9092
+
+# msg 
+kafka-console-consumer.sh --topic scalpler.order --bootstrap-server localhost:9092 --from-beginning
 
 ```
 ###### 6. zookeeper
@@ -96,3 +116,21 @@ FLUSH PRIVILEGES;
 ```
 
 
+```
+curl --location --request POST 'https://bi-data-service.i.uco.com/pii' \
+--header 'X-Api-Token: a037e6ce467ecb8d55e67afe587282b2' \
+--header 'User-Agent: Apifox/1.0.0 (https://apifox.com)' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "ciphertexts": [
+        "vault:v1:JVuKGSLIWjC4I8QV5zgLyNdpQoMaY6cSamuOUsvcI3+mpXeWjunm"
+    ],
+    "dataType": "MOBILE",
+    "platform": "100074"
+}'
+```
+
+
+
+
+curl -X POST --header 'Content-Type: application/json' http://addressparser-api:8000/batch/parse_address --data '["浙江省海外留学人员创业园(下沙)"]'

@@ -9,12 +9,14 @@ deploy/database/clickhouse/ch_data
 .idea
 *.test.*
 test.*
-source-code
+source-code/**
 mysql/data
 mysql/logs
 clickhouse
 .vscode
 *.class
-*.go.mod
-*.go.sum
+**/go.mod
+**/go.sum
 *.venv
+**logs
+**__pycache__**
