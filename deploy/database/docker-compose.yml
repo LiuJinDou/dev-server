@@ -1,0 +1,69 @@
+version: '3'
+services:
+  mysql:
+    image: ${MYSQL_IMAGE}
+    container_name: ${MYSQL_CONTAINER_NAME:-dev-mysql}
+    restart: on-failure:3
+    env_file:
+      - .env
+    volumes:
+      - ./mysql/data:/var/lib/mysql:rw
+      - ./mysql/logs:/logs:rw
+      - ./mysql/conf:/etc/mysql/conf.d:rw
+    ports:
+      - ${MYSQL_PORT:-3306}:3306
+
+  clickhouse-node:
+    env_file:
+      - .env
+    container_name: ${CLICKHOUSE_CONTAINER_NAME:-dev_clickhouse}
+    image: ${CLICKHOUSE_IMAGE}
+    volumes:
+      - ./clickhouse/ch_data:/var/lib/clickhouse:rw
+      - ./clickhouse/ch_logs:/var/log/clickhouse-server:rw
+      # - ./clickhouse/config/config.xml:/etc/clickhouse-server/config.xml:rw
+      - ./clickhouse/users.xml:/etc/clickhouse-server/users.xml:rw
+    restart: on-failure:10
+    ports:
+      - "${CLICKHOUSE_HTTP_PORT:-18123}:8123"
+      - "${CLICKHOUSE_TCP_PORT:-9000}:9000"
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --query='select 1' --max_execution_time=5"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      - SHORT_NODE_ID=${SHORT_NODE_ID}
+  # clickhouse-node2:
+  #   image: ${IMAGE}
+  #   container_name: ${CONTAINER_NAME:-local_clickhouse}_${SHORT_NODE_ID2}
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./ch_data2:/var/lib/clickhouse:rw
+  #     - ./ch_logs2:/var/log/clickhouse-server:rw
+  #     - ./config/config.xml:/etc/clickhouse-server/config.xml
+  #     - ./config/users.xml:/etc/clickhouse-server/users.xml
+  #   restart: on-failure:10
+  #   ports:
+  #     - "${HTTP_PORT_NODE2}:8123"
+  #     - "${TCP_PORT_NODE2}:9000"  
+  #   environment:
+  #     - SHORT_NODE_ID=2
+  # clickhouse-node3:
+  #   image: ${IMAGE}
+  #   container_name: ${CONTAINER_NAME:-local_clickhouse}_${SHORT_NODE_ID3}
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./ch_data3:/var/lib/clickhouse:rw
+  #     - ./ch_logs3:/var/log/clickhouse-server:rw
+  #     - ./config/config.xml:/etc/clickhouse-server/config.xml
+  #     - ./config/users.xml:/etc/clickhouse-server/users.xml
+  #   restart: on-failure:10
+  #   ports:
+  #     - "${HTTP_PORT_NODE3}:8123"
+  #     - "${TCP_PORT_NODE3}:9000"    
+  #   environment:
+  #     - SHORT_NODE_ID=3
+
